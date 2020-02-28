@@ -23,6 +23,10 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
     protected TrackableBehaviour.Status m_PreviousStatus;
     protected TrackableBehaviour.Status m_NewStatus;
 
+    public GameObject text;
+    public char[] secret = new char[] { 'C', 'O', 'R', 'D', 'E' };
+    private static int position = 0;
+
     #endregion // PROTECTED_MEMBER_VARIABLES
 
     #region UNITY_MONOBEHAVIOUR_METHODS
@@ -44,6 +48,28 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
 
     #region PUBLIC_METHODS
 
+    void addLetter(char L)
+    {
+        text.SetActive(false);
+
+        Debug.Log(secret[position].ToString().ToUpper() + " " + L.ToString().ToUpper());
+        Debug.Log(position);
+        if (secret[position].ToString().ToUpper() == L.ToString().ToUpper())
+        {
+            position += 1;
+            if (position == 5)
+            {
+                text.SetActive(true);
+                position = 0;
+            }
+        }
+        else
+        {
+            position = 0;
+        }
+        Debug.Log("POSITIOOOOOOOOOOOOOOOOOOON " + position.ToString());
+    }
+
     /// <summary>
     ///     Implementation of the ITrackableEventHandler function called when the
     ///     tracking state changes.
@@ -60,6 +86,7 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
             newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
         {
             Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " found");
+            addLetter(mTrackableBehaviour.TrackableName.ToCharArray()[0]);
             OnTrackingFound();
         }
         else if (previousStatus == TrackableBehaviour.Status.TRACKED &&
